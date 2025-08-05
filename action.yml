@@ -48,7 +48,6 @@ runs:
         packages: libglx-mesa0 libgl1 xvfb x11-xserver-utils 
 
     - name: Install Linux Window manager
-      shell: bash
       if: runner.os == 'Linux' && inputs.wm == 'herbstluftwm'
       uses: awalsh128/cache-apt-pkgs-action@latest
       with:
