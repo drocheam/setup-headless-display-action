@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, macos-14, macos-13, ubuntu-24.04, ubuntu-22.04, windows-2025, windows-2022]
+        os: [macos-15, macos-14, macos-15-intel, ubuntu-24.04, ubuntu-22.04, ubuntu-24.04-arm, windows-2025, windows-2022]
         qt: [""]
         mesa: [""]
         include:
@@ -30,8 +30,9 @@ jobs:
           - os: ubuntu-latest
             qt: "pyside6"
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Test Action
         uses: ./
         with:
@@ -43,7 +44,7 @@ jobs:
       - run: pip install pyvista
       - run: python tests/test_pyvista.py
       - run: python -c "import pyvista;print(pyvista.Report())"
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.os }}-${{ matrix.qt }}-sphere
           path: sphere.png
@@ -57,7 +58,7 @@ jobs:
           pip install ${{ matrix.qt }} matplotlib qtpy
           QT_DEBUG_PLUGINS=1 LIBGL_DEBUG=verbose python tests/test_qt.py
         shell: bash
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: ${{ matrix.os }}-${{ matrix.qt }}-cube
           path: ${{ matrix.os }}-${{ matrix.qt }}-cube.png
@@ -70,7 +71,7 @@ jobs:
         env:
           MATRIX_OS: ${{ matrix.os }}
           MATRIX_QT: ${{ matrix.qt }}
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         if: matrix.qt != ''
         with:
           name: ${{ matrix.os }}-${{ matrix.qt }}-vispy-volume
